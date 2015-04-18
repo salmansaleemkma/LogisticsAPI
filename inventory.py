@@ -1,39 +1,24 @@
-from flask import Flask, jsonify, render_template, json
+from flask import Flask, jsonify, render_template, json, request
 import couchdb
+from flask.ext.cors import CORS
 
-couch = couchdb.Server('http://salmansaleemk:BoostUp@salmansaleemk.iriscouch.com/')
-inventory = couch['inventory']
-yappdata = couch['yappdata']
+couch = couchdb.Server('http://admin:GameHalt@salmansaleemk.iriscouch.com/')
+
 bookings = couch['bookings']
 
 def all_docs(database_name):
-    docs= []
+    docs = []
     for id in database_name:
         docs.append(database_name[id])
     return docs
     
 app = Flask(__name__)
+cors = CORS(app)
 
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('index.html')
-    
-@app.route('/inventory', methods=['GET'])
-def inventory_all():
-    return jsonify({'inventory':all_docs(inventory)})
-    
-@app.route('/inventory/<doc_id>', methods=['GET'])
-def inventory_doc(doc_id):
-    return jsonify({ 'inventory':inventory[doc_id]})
-    
-@app.route('/yappdata', methods=['GET'])
-def yappdata_all():
-    return jsonify({'yappdata':all_docs(yappdata)})
-    
-@app.route('/yappdata/<doc_id>', methods=['GET'])
-def yappdata_doc(doc_id):
-    return jsonify({ 'yappdata':yappdata[doc_id]})
     
 @app.route('/bookings', methods=['GET'])
 def bookings_all():
@@ -42,6 +27,23 @@ def bookings_all():
 @app.route('/bookings/<doc_id>', methods=['GET'])
 def bookings_doc(doc_id):
     return jsonify({ 'booking' :bookings[doc_id]})
+    
+@app.route('/bookings', methods=['POST'])
+def create_bookings():
+    
+    newdoc = {
+        'charges': request.json['booking']['charges'],
+        'name':request.json['booking']['name'],
+        'from':request.json['booking']['from'],
+        'purpose':request.json['booking']['purpose'],
+        'requiredkms':request.json['booking']['requiredkms'],
+        'time':request.json['booking']['time'],
+        'to':request.json['booking']['to']
+        }
+    bookings.save(newdoc)
+    return jsonify({'booking': newdoc}), 201
+
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0',port=8081)
+    app.run(debug=True,host='0.0.0.0',port=8080)
+    
