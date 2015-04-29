@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, json, request
 import couchdb
 from flask.ext.cors import CORS
+import os
 
 couch = couchdb.Server('http://admin:GameHalt@salmansaleemk.iriscouch.com/')
 
