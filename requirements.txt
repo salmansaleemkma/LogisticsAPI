@@ -1,5 +1,7 @@
 Flask
 Jinja2
 Werkzeug
+gunicorn
 requests
 couchdb
+flask-cors
