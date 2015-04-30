@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, render_template, json, request
 import couchdb
 from flask.ext.cors import CORS
-import os
 
 couch = couchdb.Server('http://admin:GameHalt@salmansaleemk.iriscouch.com/')
 
@@ -46,6 +45,5 @@ def create_bookings():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True,port=port)
+    app.run(debug=True,host='0.0.0.0',port=8080)
     
