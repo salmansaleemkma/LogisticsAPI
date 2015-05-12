@@ -1,13 +1,13 @@
 # inventory
-API for Int-App powered by Flask
+API for Int-App powered by Flask, CouchDB
 
 ## Installation
 
-* `git clone <repository-url>` this repository
-* change into the new directory
+`git clone <repository-url>` this repository
+change into the new directory
 
-* 'pip3 install -r requirements.txt'
+`pip3 install -r requirements.txt`
 
 ## Running / Development
 
-* `python3 web.py`
+`python3 web.py`
