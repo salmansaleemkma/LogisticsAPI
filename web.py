@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template, json, request
 import couchdb
 from flask.ext.cors import CORS
 
-couch = couchdb.Server('http://admin:password@salmansaleemk.iriscouch.com/')
+couch = couchdb.Server('https://mseatinewdedezedgdriesev:ndg6i5qy8hHYoAfve4fsEdGj@inventorybackend.cloudant.com')
 
 bookings = couch['bookings']
 
@@ -39,11 +39,35 @@ def create_bookings():
         'requiredkms':request.json['booking']['requiredkms'],
         'time':request.json['booking']['time'],
         'to':request.json['booking']['to']
-        }
+        
+    }
     bookings.save(newdoc)
     return jsonify({'booking': newdoc}), 201
 
+@app.route('/bookings/<doc_id>', methods=['PUT'])
+def update_bookings(doc_id):
+
+    updatedoc = bookings[doc_id]
+    
+    updatedoc['charges'] = request.json['booking']['charges']
+    updatedoc['name'] = request.json['booking']['name']
+    updatedoc['from'] = request.json['booking']['from']
+    updatedoc['purpose'] = request.json['booking']['purpose']
+    updatedoc['requiredkms'] = request.json['booking']['requiredkms']
+    updatedoc['time'] = request.json['booking']['time']
+    updatedoc['to'] = request.json['booking']['to']
+    
+    bookings[doc_id] = updatedoc
+    return jsonify({'booking': bookings[doc_id]})
+    
+@app.route('/bookings/<doc_id>',methods=['DELETE'])
+def delete_booking(doc_id):
+    
+    doc = bookings[doc_id]
+    bookings.delete(doc)
+
+    return jsonify({'result': True})
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0',port=8080)
+    app.run(debug=True,host='0.0.0.0')
     
